@@ -7,6 +7,11 @@ function HTMLActuator() {
   this.score = 0;
 }
 
+HTMLActuator.prototype.prefersReducedMotion = function () {
+  return window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+};
+
 HTMLActuator.prototype.actuate = function (grid, metadata) {
   var self = this;
 
@@ -70,11 +75,13 @@ HTMLActuator.prototype.addTile = function (tile, decorative) {
     wrapper.setAttribute("aria-label", String(tile.value));
   }
 
-  if (tile.previousPosition) {
-    // Make sure that the tile gets rendered in the previous position first
+  if (tile.previousPosition && !this.prefersReducedMotion()) {
+    // Second frame so the start transform actually paints before travel.
     window.requestAnimationFrame(function () {
-      classes[2] = self.positionClass({ x: tile.x, y: tile.y });
-      self.applyClasses(wrapper, classes); // Update the position
+      window.requestAnimationFrame(function () {
+        classes[2] = self.positionClass({ x: tile.x, y: tile.y });
+        self.applyClasses(wrapper, classes);
+      });
     });
   } else if (tile.mergedFrom) {
     classes.push("tile-merged");
@@ -84,7 +91,7 @@ HTMLActuator.prototype.addTile = function (tile, decorative) {
     tile.mergedFrom.forEach(function (merged) {
       self.addTile(merged, true);
     });
-  } else {
+  } else if (!tile.previousPosition) {
     classes.push("tile-new");
     this.applyClasses(wrapper, classes);
   }
