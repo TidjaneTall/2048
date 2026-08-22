@@ -46,7 +46,7 @@ HTMLActuator.prototype.clearContainer = function (container) {
   }
 };
 
-HTMLActuator.prototype.addTile = function (tile) {
+HTMLActuator.prototype.addTile = function (tile, decorative) {
   var self = this;
 
   var wrapper   = document.createElement("div");
@@ -63,6 +63,12 @@ HTMLActuator.prototype.addTile = function (tile) {
 
   inner.classList.add("tile-inner");
   inner.textContent = tile.value;
+  if (decorative) {
+    wrapper.setAttribute("aria-hidden", "true");
+  } else {
+    wrapper.setAttribute("role", "img");
+    wrapper.setAttribute("aria-label", String(tile.value));
+  }
 
   if (tile.previousPosition) {
     // Make sure that the tile gets rendered in the previous position first
@@ -74,9 +80,9 @@ HTMLActuator.prototype.addTile = function (tile) {
     classes.push("tile-merged");
     this.applyClasses(wrapper, classes);
 
-    // Render the tiles that merged
+    // Render the tiles that merged (visual only)
     tile.mergedFrom.forEach(function (merged) {
-      self.addTile(merged);
+      self.addTile(merged, true);
     });
   } else {
     classes.push("tile-new");
@@ -114,6 +120,7 @@ HTMLActuator.prototype.updateScore = function (score) {
   if (difference > 0) {
     var addition = document.createElement("div");
     addition.classList.add("score-addition");
+    addition.setAttribute("aria-hidden", "true");
     addition.textContent = "+" + difference;
 
     this.scoreContainer.appendChild(addition);
