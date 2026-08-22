@@ -306,9 +306,9 @@ hr {
 
 .tile {
   position: absolute;
-  -webkit-transition: 100ms ease-in-out;
-  -moz-transition: 100ms ease-in-out;
-  transition: 100ms ease-in-out;
+  -webkit-transition: 180ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  -moz-transition: 180ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: 180ms cubic-bezier(0.22, 0.61, 0.36, 1);
   -webkit-transition-property: -webkit-transform;
   -moz-transition-property: -moz-transform;
   transition-property: transform; }
@@ -422,9 +422,9 @@ hr {
     -moz-transform: scale(1);
     transform: scale(1); } }
 .tile-new .tile-inner {
-  -webkit-animation: appear 200ms ease 100ms;
-  -moz-animation: appear 200ms ease 100ms;
-  animation: appear 200ms ease 100ms;
+  -webkit-animation: appear 160ms ease 180ms;
+  -moz-animation: appear 160ms ease 180ms;
+  animation: appear 160ms ease 180ms;
   -webkit-animation-fill-mode: backwards;
   -moz-animation-fill-mode: backwards;
   animation-fill-mode: backwards; }
@@ -476,9 +476,9 @@ hr {
     transform: scale(1); } }
 .tile-merged .tile-inner {
   z-index: 20;
-  -webkit-animation: pop 200ms ease 100ms;
-  -moz-animation: pop 200ms ease 100ms;
-  animation: pop 200ms ease 100ms;
+  -webkit-animation: pop 180ms ease 180ms;
+  -moz-animation: pop 180ms ease 180ms;
+  animation: pop 180ms ease 180ms;
   -webkit-animation-fill-mode: backwards;
   -moz-animation-fill-mode: backwards;
   animation-fill-mode: backwards; }
@@ -730,3 +730,17 @@ hr {
     margin-top: 90px !important; }
   .game-message .lower {
     margin-top: 30px !important; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    -webkit-transition: none;
+    -moz-transition: none;
+    transition: none; }
+
+  .tile-new .tile-inner,
+  .tile-merged .tile-inner,
+  .score-addition,
+  .game-container .game-message {
+    -webkit-animation: none;
+    -moz-animation: none;
+    animation: none; } }

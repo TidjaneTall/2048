@@ -20,6 +20,9 @@ $game-container-margin-top: 40px;
 $game-container-background: #bbada0;
 
 $transition-speed: 100ms;
+// Long enough to read a 3-cell slide; input stays unlocked.
+$tile-travel: 180ms;
+$tile-travel-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 
 html, body {
   margin: 0;
@@ -335,7 +338,7 @@ hr {
   }
 
   // Movement transition
-  @include transition($transition-speed ease-in-out);
+  @include transition($tile-travel $tile-travel-ease);
   -webkit-transition-property: -webkit-transform;
   -moz-transition-property: -moz-transform;
   transition-property: transform;
@@ -436,7 +439,7 @@ hr {
 }
 
 .tile-new .tile-inner {
-  @include animation(appear 200ms ease $transition-speed);
+  @include animation(appear 160ms ease $tile-travel);
   @include animation-fill-mode(backwards);
 }
 
@@ -456,7 +459,7 @@ hr {
 
 .tile-merged .tile-inner {
   z-index: 20;
-  @include animation(pop 200ms ease $transition-speed);
+  @include animation(pop 180ms ease $tile-travel);
   @include animation-fill-mode(backwards);
 }
 
@@ -554,5 +557,22 @@ hr {
     .lower {
       margin-top: 30px !important;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    -webkit-transition: none;
+    -moz-transition: none;
+    transition: none;
+  }
+
+  .tile-new .tile-inner,
+  .tile-merged .tile-inner,
+  .score-addition,
+  .game-container .game-message {
+    -webkit-animation: none;
+    -moz-animation: none;
+    animation: none;
   }
 }
