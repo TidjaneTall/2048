@@ -92,11 +92,14 @@ KeyboardInputManager.prototype.listen = function () {
     }
 
     event.preventDefault();
-  });
+  }, { passive: false });
 
   gameContainer.addEventListener(this.eventTouchmove, function (event) {
+    if (event.touches && event.touches.length > 1) {
+      return; // Let the browser handle pinch-zoom
+    }
     event.preventDefault();
-  });
+  }, { passive: false });
 
   gameContainer.addEventListener(this.eventTouchend, function (event) {
     if ((!window.navigator.msPointerEnabled && event.touches.length > 0) ||

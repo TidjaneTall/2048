@@ -159,12 +159,21 @@ hr {
 @mixin button {
   display: inline-block;
   background: darken($game-container-background, 20%);
+  border: none;
   border-radius: 3px;
   padding: 0 20px;
   text-decoration: none;
   color: $bright-text-color;
   height: 40px;
   line-height: 42px;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid $bright-text-color;
+    outline-offset: 2px;
+  }
 }
 
 // Game field mixin used to render CSS at different width
@@ -182,8 +191,8 @@ hr {
     -moz-user-select: none;
     -ms-user-select: none;
 
-    -ms-touch-action: none;
-    touch-action: none;
+    -ms-touch-action: pinch-zoom;
+    touch-action: pinch-zoom;
 
     background: $game-container-background;
     border-radius: $tile-border-radius * 2;
@@ -221,7 +230,7 @@ hr {
         margin-top: 59px;
       }
 
-      a {
+      button {
         @include button;
         margin-left: 9px;
         // margin-top: 59px;
@@ -238,7 +247,7 @@ hr {
         background: rgba($tile-gold-color, .5);
         color: $bright-text-color;
 
-	a.keep-playing-button {
+	button.keep-playing-button {
 	  display: inline-block;
 	}
       }
