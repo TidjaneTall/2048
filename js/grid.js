@@ -26,7 +26,7 @@ Grid.prototype.fromState = function (state) {
 
     for (var y = 0; y < this.size; y++) {
       var tile = state[x][y];
-      row.push(tile ? new Tile(tile.position, tile.value) : null);
+      row.push(tile ? new globalThis.Tile(tile.position, tile.value) : null);
     }
   }
 
@@ -34,11 +34,12 @@ Grid.prototype.fromState = function (state) {
 };
 
 // Find the first available random position
-Grid.prototype.randomAvailableCell = function () {
+Grid.prototype.randomAvailableCell = function (random) {
   var cells = this.availableCells();
+  var pick = random || Math.random;
 
   if (cells.length) {
-    return cells[Math.floor(Math.random() * cells.length)];
+    return cells[Math.floor(pick() * cells.length)];
   }
 };
 
@@ -115,3 +116,8 @@ Grid.prototype.serialize = function () {
     cells: cellState
   };
 };
+
+if (typeof globalThis !== "undefined") globalThis.Grid = Grid;
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { Grid: Grid };
+}

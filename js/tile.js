@@ -25,3 +25,8 @@ Tile.prototype.serialize = function () {
     value: this.value
   };
 };
+
+if (typeof globalThis !== "undefined") globalThis.Tile = Tile;
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { Tile: Tile };
+}
