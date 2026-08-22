@@ -117,25 +117,35 @@ HTMLActuator.prototype.positionClass = function (position) {
 };
 
 HTMLActuator.prototype.updateScore = function (score) {
-  this.clearContainer(this.scoreContainer);
-
   var difference = score - this.score;
   this.score = score;
 
-  this.scoreContainer.textContent = this.score;
+  var value = this.scoreContainer.querySelector(".score-value");
+  if (value) {
+    value.textContent = this.score;
+  } else {
+    this.scoreContainer.textContent = this.score;
+  }
+
+  var previous = this.scoreContainer.querySelector(".score-addition");
+  if (previous) this.scoreContainer.removeChild(previous);
 
   if (difference > 0) {
-    var addition = document.createElement("div");
+    var addition = document.createElement("span");
     addition.classList.add("score-addition");
     addition.setAttribute("aria-hidden", "true");
     addition.textContent = "+" + difference;
-
     this.scoreContainer.appendChild(addition);
   }
 };
 
 HTMLActuator.prototype.updateBestScore = function (bestScore) {
-  this.bestContainer.textContent = bestScore;
+  var value = this.bestContainer.querySelector(".score-value");
+  if (value) {
+    value.textContent = bestScore;
+  } else {
+    this.bestContainer.textContent = bestScore;
+  }
 };
 
 HTMLActuator.prototype.message = function (won) {

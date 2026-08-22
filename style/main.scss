@@ -1,591 +1,450 @@
-@import "helpers";
-@import "fonts/clear-sans.css";
+@import url("fonts/clear-sans.css");
 
-$field-width: 500px;
-$grid-spacing: 15px;
-$grid-row-cells: 4;
-$tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
-$tile-border-radius: 3px;
+:root {
+  --paper: #f3f1ee;
+  --ink: #1c1917;
+  --ink-soft: #6f6a64;
+  --board: #2a2522;
+  --cell: #3d3732;
+  --cream: #f4efe6;
+  --copper: #c4622d;
+  --copper-deep: #9a3f1f;
+  --tile: 100px;
+  --gap: 12px;
+  --pad: 14px;
+  --board-size: calc(var(--pad) * 2 + var(--tile) * 4 + var(--gap) * 3);
+  --radius-tile: 10px;
+  --radius-board: 18px;
+  --radius-chip: 10px;
+  --travel: 180ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --font: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  --shadow-board: 0 18px 40px rgba(31, 27, 24, 0.22);
+  --shadow-tile: 0 1px 0 rgba(255, 255, 255, 0.14) inset, 0 6px 16px rgba(0, 0, 0, 0.28);
+}
 
-$mobile-threshold: $field-width + 20px;
+* {
+  box-sizing: border-box;
+}
 
-$text-color: #776E65;
-$bright-text-color: #f9f6f2;
-
-$tile-color: #eee4da;
-$tile-gold-color: #edc22e;
-$tile-gold-glow-color: lighten($tile-gold-color, 15%);
-
-$game-container-margin-top: 40px;
-$game-container-background: #bbada0;
-
-$transition-speed: 100ms;
-// Long enough to read a 3-cell slide; input stays unlocked.
-$tile-travel: 180ms;
-$tile-travel-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
-
-html, body {
+html,
+body {
   margin: 0;
-  padding: 0;
-
-  background: #faf8ef;
-  color: $text-color;
-  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
-  font-size: 18px;
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
 }
 
 body {
-  margin: 80px 0;
-}
-
-.heading {
-  @include clearfix;
-}
-
-h1.title {
-  font-size: 80px;
-  font-weight: bold;
-  margin: 0;
-  display: block;
-  float: left;
-}
-
-@include keyframes(move-up) {
-  0% {
-    top: 25px;
-    opacity: 1;
-  }
-
-  100% {
-    top: -50px;
-    opacity: 0;
-  }
-}
-
-.scores-container {
-  float: right;
-  text-align: right;
-}
-
-.score-container, .best-container {
-  $height: 25px;
-
-  position: relative;
-  display: inline-block;
-  background: $game-container-background;
-  padding: 15px 25px;
-  font-size: $height;
-  height: $height;
-  line-height: $height + 22px;
-  font-weight: bold;
-  border-radius: 3px;
-  color: white;
-  margin-top: 8px;
-  text-align: center;
-
-  &:after {
-    position: absolute;
-    width: 100%;
-    top: 10px;
-    left: 0;
-    text-transform: uppercase;
-    font-size: 13px;
-    line-height: 13px;
-    text-align: center;
-    color: $tile-color;
-  }
-
-  .score-addition {
-    position: absolute;
-    right: 30px;
-    color: red;
-    font-size: $height;
-    line-height: $height;
-    font-weight: bold;
-    color: rgba($text-color, .9);
-    z-index: 100;
-    @include animation(move-up 600ms ease-in);
-    @include animation-fill-mode(both);
-  }
-}
-
-.score-container:after {
-  content: "Score";
-}
-
-.best-container:after {
-  content: "Best"
-}
-
-p {
-  margin-top: 0;
-  margin-bottom: 10px;
-  line-height: 1.65;
-}
-
-a {
-  color: $text-color;
-  font-weight: bold;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-strong {
-  &.important {
-    text-transform: uppercase;
-  }
-}
-
-hr {
-  border: none;
-  border-bottom: 1px solid lighten($text-color, 40%);
-  margin-top: 20px;
-  margin-bottom: 30px;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.25rem;
 }
 
 .container {
-  width: $field-width;
-  margin: 0 auto;
+  width: var(--board-size);
+  max-width: 100%;
 }
 
-@include keyframes(fade-in) {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.65rem;
 }
 
-// Styles for buttons
-@mixin button {
-  display: inline-block;
-  background: darken($game-container-background, 20%);
+.heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 2.75rem;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+.scores-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.score-container,
+.best-container {
+  position: relative;
+  min-width: 4.5rem;
+  padding: 0.4rem 0.7rem 0.45rem;
+  background: var(--board);
+  color: var(--cream);
+  border-radius: var(--radius-chip);
+  text-align: right;
+}
+
+.score-label {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #b7aea4;
+}
+
+.score-value {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.score-addition {
+  position: absolute;
+  right: 0.7rem;
+  top: 0.15rem;
+  color: var(--cream);
+  font-weight: 700;
+  pointer-events: none;
+  animation: move-up 600ms var(--ease) both;
+}
+
+.game-intro {
+  margin: 0 0 1.15rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.game-intro strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.restart-button,
+.game-message button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
-  border-radius: 3px;
-  padding: 0 20px;
-  text-decoration: none;
-  color: $bright-text-color;
-  height: 40px;
-  line-height: 42px;
+  margin: 0;
+  height: 2.75rem;
+  padding: 0 1.1rem;
+  border-radius: var(--radius-chip);
+  background: var(--copper);
+  color: var(--cream);
   font-family: inherit;
-  font-size: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   cursor: pointer;
-
-  &:focus-visible {
-    outline: 2px solid $bright-text-color;
-    outline-offset: 2px;
-  }
+  flex-shrink: 0;
 }
 
-// Game field mixin used to render CSS at different width
-@mixin game-field {
-  .game-container {
-    margin-top: $game-container-margin-top;
-    position: relative;
-    padding: $grid-spacing;
-
-    cursor: default;
-    -webkit-touch-callout: none;
-    -ms-touch-callout: none;
-
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-
-    -ms-touch-action: pinch-zoom;
-    touch-action: pinch-zoom;
-
-    background: $game-container-background;
-    border-radius: $tile-border-radius * 2;
-    width: $field-width;
-    height: $field-width;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-
-    .game-message {
-      display: none;
-
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: rgba($tile-color, .5);
-      z-index: 100;
-
-      text-align: center;
-
-      p {
-        font-size: 60px;
-        font-weight: bold;
-        height: 60px;
-        line-height: 60px;
-        margin-top: 222px;
-        // height: $field-width;
-        // line-height: $field-width;
-      }
-
-      .lower {
-        display: block;
-        margin-top: 59px;
-      }
-
-      button {
-        @include button;
-        margin-left: 9px;
-        // margin-top: 59px;
-
-	&.keep-playing-button {
-	  display: none;
-	}
-      }
-
-      @include animation(fade-in 800ms ease $transition-speed * 12);
-      @include animation-fill-mode(both);
-
-      &.game-won {
-        background: rgba($tile-gold-color, .5);
-        color: $bright-text-color;
-
-	button.keep-playing-button {
-	  display: inline-block;
-	}
-      }
-
-      &.game-won, &.game-over {
-        display: block;
-      }
-    }
-  }
-
-  .grid-container {
-    position: absolute;
-    z-index: 1;
-  }
-
-  .grid-row {
-    margin-bottom: $grid-spacing;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    &:after {
-      content: "";
-      display: block;
-      clear: both;
-    }
-  }
-
-  .grid-cell {
-    width: $tile-size;
-    height: $tile-size;
-    margin-right: $grid-spacing;
-    float: left;
-
-    border-radius: $tile-border-radius;
-
-    background: rgba($tile-color, .35);
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-
-  .tile-container {
-    position: absolute;
-    z-index: 2;
-  }
-
-  .tile {
-    &, .tile-inner {
-      width: ceil($tile-size);
-      height: ceil($tile-size);
-      line-height: ceil($tile-size);
-    }
-
-    // Build position classes
-    @for $x from 1 through $grid-row-cells {
-      @for $y from 1 through $grid-row-cells {
-        &.tile-position-#{$x}-#{$y} {
-          $xPos: floor(($tile-size + $grid-spacing) * ($x - 1));
-          $yPos: floor(($tile-size + $grid-spacing) * ($y - 1));
-          @include transform(translate($xPos, $yPos));
-        }
-      }
-    }
-  }
+.restart-button:hover,
+.game-message button:hover {
+  background: var(--copper-deep);
 }
 
-// End of game-field mixin
-@include game-field;
+.restart-button:focus-visible,
+.game-message button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.game-container {
+  position: relative;
+  width: var(--board-size);
+  height: var(--board-size);
+  background: var(--board);
+  border-radius: var(--radius-board);
+  box-shadow: var(--shadow-board);
+  touch-action: pinch-zoom;
+  user-select: none;
+  cursor: default;
+}
+
+.grid-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, var(--tile));
+  grid-template-rows: repeat(4, var(--tile));
+  gap: var(--gap);
+  padding: var(--pad);
+}
+
+.grid-row {
+  display: contents;
+}
+
+.grid-cell {
+  border-radius: var(--radius-tile);
+  background: var(--cell);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.tile-container {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
 
 .tile {
-  position: absolute; // Makes transforms relative to the top-left corner
+  position: absolute;
+  top: var(--pad);
+  left: var(--pad);
+  width: var(--tile);
+  height: var(--tile);
+  transition: transform var(--travel) var(--ease);
+  transform: translate(
+    calc(var(--col) * (var(--tile) + var(--gap))),
+    calc(var(--row) * (var(--tile) + var(--gap)))
+  );
+}
 
-  .tile-inner {
-    border-radius: $tile-border-radius;
+.tile-position-1-1 { --col: 0; --row: 0; }
+.tile-position-1-2 { --col: 0; --row: 1; }
+.tile-position-1-3 { --col: 0; --row: 2; }
+.tile-position-1-4 { --col: 0; --row: 3; }
+.tile-position-2-1 { --col: 1; --row: 0; }
+.tile-position-2-2 { --col: 1; --row: 1; }
+.tile-position-2-3 { --col: 1; --row: 2; }
+.tile-position-2-4 { --col: 1; --row: 3; }
+.tile-position-3-1 { --col: 2; --row: 0; }
+.tile-position-3-2 { --col: 2; --row: 1; }
+.tile-position-3-3 { --col: 2; --row: 2; }
+.tile-position-3-4 { --col: 2; --row: 3; }
+.tile-position-4-1 { --col: 3; --row: 0; }
+.tile-position-4-2 { --col: 3; --row: 1; }
+.tile-position-4-3 { --col: 3; --row: 2; }
+.tile-position-4-4 { --col: 3; --row: 3; }
 
-    background: $tile-color;
-    text-align: center;
-    font-weight: bold;
-    z-index: 10;
+.tile-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-tile);
+  background: var(--cream);
+  color: var(--ink);
+  font-size: calc(var(--tile) * 0.42);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  box-shadow: var(--shadow-tile);
+}
 
-    font-size: 55px;
+.tile-2 .tile-inner { background: #f4efe6; color: var(--ink); }
+.tile-4 .tile-inner { background: #e7d9c4; color: var(--ink); }
+.tile-8 .tile-inner { background: #d08952; color: var(--cream); }
+.tile-16 .tile-inner { background: #c46b3a; color: var(--cream); }
+.tile-32 .tile-inner { background: #b6532e; color: var(--cream); }
+.tile-64 .tile-inner { background: #a43f24; color: var(--cream); }
+.tile-128 .tile-inner,
+.tile-256 .tile-inner,
+.tile-512 .tile-inner {
+  background: #c9a25a;
+  color: var(--ink);
+  font-size: calc(var(--tile) * 0.34);
+}
+.tile-256 .tile-inner { background: #c4963e; }
+.tile-512 .tile-inner { background: #b88728; }
+.tile-1024 .tile-inner,
+.tile-2048 .tile-inner,
+.tile-super .tile-inner {
+  font-size: calc(var(--tile) * 0.28);
+}
+.tile-1024 .tile-inner {
+  background: #8a5a1c;
+  color: var(--cream);
+}
+.tile-2048 .tile-inner {
+  background: #1f1b18;
+  color: var(--cream);
+  box-shadow: inset 0 0 0 2px #c9a25a, 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+.tile-super .tile-inner {
+  background: #141210;
+  color: var(--cream);
+}
+
+.game-message {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border-radius: inherit;
+  background: rgba(31, 27, 24, 0.78);
+  color: var(--cream);
+  text-align: center;
+  animation: fade-in 280ms var(--ease);
+}
+
+.game-message.game-won,
+.game-message.game-over {
+  display: flex;
+}
+
+.game-message p {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.game-message .lower {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.game-message .keep-playing-button {
+  display: none;
+}
+
+.game-message.game-won .keep-playing-button {
+  display: inline-flex;
+  align-items: center;
+}
+
+.game-message button {
+  display: inline-flex;
+  align-items: center;
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.game-message button:hover {
+  background: #e7d9c4;
+}
+
+.game-message button:focus-visible {
+  outline-color: var(--cream);
+}
+
+.game-explanation,
+.credit {
+  margin: 1.25rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.credit {
+  margin-top: 0.5rem;
+}
+
+.credit a {
+  color: inherit;
+  font-weight: 700;
+  text-underline-offset: 0.15em;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
   }
-
-  // Movement transition
-  @include transition($tile-travel $tile-travel-ease);
-  -webkit-transition-property: -webkit-transform;
-  -moz-transition-property: -moz-transform;
-  transition-property: transform;
-
-  $base: 2;
-  $exponent: 1;
-  $limit: 11;
-
-  // Colors for all 11 states, false = no special color
-  $special-colors: false false, // 2
-                   false false, // 4
-                   #f78e48 true, // 8
-                   #fc5e2e true, // 16
-                   #ff3333 true, // 32
-                   #ff0000 true, // 64
-                   false true, // 128
-                   false true, // 256
-                   false true, // 512
-                   false true, // 1024
-                   false true; // 2048
-
-  // Build tile colors
-  @while $exponent <= $limit {
-    $power: pow($base, $exponent);
-
-    &.tile-#{$power} .tile-inner {
-      // Calculate base background color
-      $gold-percent: ($exponent - 1) / ($limit - 1) * 100;
-      $mixed-background: mix($tile-gold-color, $tile-color, $gold-percent);
-
-      $nth-color: nth($special-colors, $exponent);
-
-      $special-background: nth($nth-color, 1);
-      $bright-color: nth($nth-color, 2);
-
-      @if $special-background {
-        $mixed-background: mix($special-background, $mixed-background, 55%);
-      }
-
-      @if $bright-color {
-        color: $bright-text-color;
-      }
-
-      // Set background
-      background: $mixed-background;
-
-      // Add glow
-      $glow-opacity: max($exponent - 4, 0) / ($limit - 4);
-
-      @if not $special-background {
-        box-shadow: 0 0 30px 10px rgba($tile-gold-glow-color, $glow-opacity / 1.8),
-                    inset 0 0 0 1px rgba(white, $glow-opacity / 3);
-      }
-
-      // Adjust font size for bigger numbers
-      @if $power >= 100 and $power < 1000 {
-        font-size: 45px;
-
-        // Media queries placed here to avoid carrying over the rest of the logic
-        @include smaller($mobile-threshold) {
-          font-size: 25px;
-        }
-      } @else if $power >= 1000 {
-        font-size: 35px;
-
-        @include smaller($mobile-threshold) {
-          font-size: 15px;
-        }
-      }
-    }
-
-    $exponent: $exponent + 1;
-  }
-
-  // 2/4 sit too close to the board fill; keep the same 2048, just seat them.
-  &.tile-2 .tile-inner {
-    background: #ead9c4;
-    color: $text-color;
-    box-shadow: inset 0 0 0 1px rgba($text-color, 0.14);
-  }
-
-  &.tile-4 .tile-inner {
-    background: #e3c89a;
-    color: $text-color;
-    box-shadow: inset 0 0 0 1px rgba($text-color, 0.16);
-  }
-
-  // Super tiles (above 2048)
-  &.tile-super .tile-inner {
-    color: $bright-text-color;
-    background: mix(#333, $tile-gold-color, 95%);
-
-    font-size: 30px;
-
-    @include smaller($mobile-threshold) {
-      font-size: 10px;
-    }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-@include keyframes(appear) {
-  0% {
-    opacity: 0;
-    @include transform(scale(0));
-  }
+@keyframes pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
 
-  100% {
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes move-up {
+  from {
+    transform: translateY(0);
     opacity: 1;
-    @include transform(scale(1));
+  }
+  to {
+    transform: translateY(-1.25rem);
+    opacity: 0;
   }
 }
 
 .tile-new .tile-inner {
-  @include animation(appear 160ms ease $tile-travel);
-  @include animation-fill-mode(backwards);
-}
-
-@include keyframes(pop) {
-  0% {
-    @include transform(scale(0));
-  }
-
-  50% {
-    @include transform(scale(1.2));
-  }
-
-  100% {
-    @include transform(scale(1));
-  }
+  animation: appear 160ms var(--ease) var(--travel) both;
 }
 
 .tile-merged .tile-inner {
   z-index: 20;
-  @include animation(pop 180ms ease $tile-travel);
-  @include animation-fill-mode(backwards);
+  animation: pop 180ms var(--ease) var(--travel) both;
 }
 
-.above-game {
-  @include clearfix;
-}
-
-.game-intro {
-  float: left;
-  line-height: 42px;
-  margin-bottom: 0;
-}
-
-.restart-button {
-  @include button;
-  display: block;
-  text-align: center;
-  float: right;
-}
-
-.game-explanation {
-  margin-top: 50px;
-}
-
-@include smaller($mobile-threshold) {
-  // Redefine variables for smaller screens
-  $field-width: 280px;
-  $grid-spacing: 10px;
-  $grid-row-cells: 4;
-  $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
-  $tile-border-radius: 3px;
-  $game-container-margin-top: 17px;
-
-  html, body {
-    font-size: 15px;
+@media (max-width: 540px) {
+  :root {
+    --tile: 68px;
+    --gap: 8px;
+    --pad: 10px;
+    --radius-tile: 8px;
+    --radius-board: 14px;
   }
 
   body {
-    margin: 20px 0;
-    padding: 0 20px;
+    padding: 1.5rem 1rem 2rem;
+    align-items: flex-start;
   }
 
-  h1.title {
-    font-size: 27px;
-    margin-top: 15px;
-  }
-
-  .container {
-    width: $field-width;
-    margin: 0 auto;
-  }
-
-  .score-container, .best-container {
-    margin-top: 0;
-    padding: 15px 10px;
-    min-width: 40px;
+  .title {
+    font-size: 2rem;
   }
 
   .heading {
-    margin-bottom: 10px;
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
 
-  // Show intro and restart button side by side
-  .game-intro {
-    width: 55%;
-    display: block;
-    box-sizing: border-box;
-    line-height: 1.65;
+  .heading-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .restart-button {
-    width: 42%;
-    padding: 0;
-    display: block;
-    box-sizing: border-box;
-    margin-top: 2px;
+    height: 2.5rem;
+    padding: 0 0.85rem;
+    font-size: 0.875rem;
   }
 
-  // Render the game field at the right width
-  @include game-field;
-
-  // Rest of the font-size adjustments in the tile class
-  .tile .tile-inner {
-    font-size: 35px;
-  }
-
-  .game-message {
-    p {
-      font-size: 30px !important;
-      height: 30px !important;
-      line-height: 30px !important;
-      margin-top: 90px !important;
-    }
-
-    .lower {
-      margin-top: 30px !important;
-    }
+  .game-message p {
+    font-size: 1.5rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .tile {
-    -webkit-transition: none;
-    -moz-transition: none;
     transition: none;
   }
 
   .tile-new .tile-inner,
   .tile-merged .tile-inner,
   .score-addition,
-  .game-container .game-message {
-    -webkit-animation: none;
-    -moz-animation: none;
+  .game-message {
     animation: none;
   }
 }
