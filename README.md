@@ -2,7 +2,9 @@
 
 Testable merge rules, motion that shows travel, an accessible board.
 
-Open `index.html` in a browser.
+**Play:** [tidjanetall.github.io/2048](https://tidjanetall.github.io/2048/)
+
+Or open `index.html` in a browser.
 
 ```bash
 npm test
