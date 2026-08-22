@@ -413,6 +413,19 @@ hr {
     $exponent: $exponent + 1;
   }
 
+  // 2/4 sit too close to the board fill; keep the same 2048, just seat them.
+  &.tile-2 .tile-inner {
+    background: #ead9c4;
+    color: $text-color;
+    box-shadow: inset 0 0 0 1px rgba($text-color, 0.14);
+  }
+
+  &.tile-4 .tile-inner {
+    background: #e3c89a;
+    color: $text-color;
+    box-shadow: inset 0 0 0 1px rgba($text-color, 0.16);
+  }
+
   // Super tiles (above 2048)
   &.tile-super .tile-inner {
     color: $bright-text-color;
