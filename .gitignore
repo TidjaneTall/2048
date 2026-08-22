@@ -1,25 +1,13 @@
-# Tooling
 .sass-cache/
 node_modules/
 dist/
 coverage/
 .vite/
 *.tsbuildinfo
-
-# Env / secrets
 .env
 .env.*
 !.env.example
-
-# Editor / OS
 .DS_Store
 .idea/
 .vscode/
-.cursor/
 *.swp
-
-# Local notes — never commit research, plans, or chat dumps
-.warroom/
-.notes/
-*.local.md
-.agi-memory/
