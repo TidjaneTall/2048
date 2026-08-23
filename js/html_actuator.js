@@ -3,6 +3,7 @@ function HTMLActuator() {
   this.scoreContainer   = document.querySelector(".score-container");
   this.bestContainer    = document.querySelector(".best-container");
   this.messageContainer = document.querySelector(".game-message");
+  this.board            = document.querySelector(".game-container");
 
   this.score = 0;
 }
@@ -28,6 +29,7 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
 
     self.updateScore(metadata.score);
     self.updateBestScore(metadata.bestScore);
+    self.announceBoard(grid);
 
     if (metadata.terminated) {
       if (metadata.over) {
@@ -123,6 +125,11 @@ HTMLActuator.prototype.updateScore = function (score) {
   var value = this.scoreContainer.querySelector(".score-value");
   if (value) {
     value.textContent = this.score;
+    value.classList.remove("is-hot");
+    if (difference > 0) {
+      void value.offsetWidth;
+      value.classList.add("is-hot");
+    }
   } else {
     this.scoreContainer.textContent = this.score;
   }
@@ -157,7 +164,24 @@ HTMLActuator.prototype.message = function (won) {
 };
 
 HTMLActuator.prototype.clearMessage = function () {
-  // IE only takes one value to remove at a time.
   this.messageContainer.classList.remove("game-won");
   this.messageContainer.classList.remove("game-over");
+};
+
+HTMLActuator.prototype.announceBoard = function (grid) {
+  if (!this.board) return;
+
+  var highest = 0;
+  grid.cells.forEach(function (column) {
+    column.forEach(function (cell) {
+      if (cell && cell.value > highest) highest = cell.value;
+    });
+  });
+
+  this.board.setAttribute(
+    "aria-label",
+    highest
+      ? "Board. Highest tile " + highest + ". Drag, swipe, or use arrow keys."
+      : "Board. Drag, swipe, or use arrow keys."
+  );
 };

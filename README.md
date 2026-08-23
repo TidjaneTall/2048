@@ -1,6 +1,8 @@
 # 2048
 
-Testable merge rules, motion that shows travel, an accessible board.
+Testable merge rules, motion that shows travel, an accessible board you can drag, swipe, or play with keys.
+
+**Play:** [tidjanetall.github.io/2048](https://tidjanetall.github.io/2048/)
 
 **Play:** [tidjanetall.github.io/2048](https://tidjanetall.github.io/2048/)
 

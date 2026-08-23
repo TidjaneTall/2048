@@ -3,78 +3,57 @@
 <head>
   <meta charset="utf-8">
   <title>2048</title>
-  <link href="style/main.css" rel="stylesheet" type="text/css">
-  <link rel="shortcut icon" href="favicon.ico">
+  <link href="style/main.css" rel="stylesheet">
+  <link rel="icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="meta/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#f3f1ee">
+  <meta name="theme-color" content="#f4f2ef">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-  <div class="container">
-    <header class="heading">
-      <h1 class="title">2048</h1>
-      <div class="heading-actions">
-        <div class="scores-container">
-          <div class="score-container" aria-live="polite" aria-atomic="true">
-            <span class="score-label">Score</span>
-            <span class="score-value">0</span>
-          </div>
-          <div class="best-container" aria-live="polite" aria-atomic="true">
-            <span class="score-label">Best</span>
-            <span class="score-value">0</span>
-          </div>
+  <main class="app">
+    <header class="bar">
+      <h1>2048</h1>
+      <div class="stats">
+        <div class="stat score-container" aria-live="polite" aria-atomic="true">
+          <span class="stat-label">Score</span>
+          <span class="stat-value score-value">0</span>
         </div>
-        <button type="button" class="restart-button">New Game</button>
+        <div class="stat best-container" aria-live="polite" aria-atomic="true">
+          <span class="stat-label">Best</span>
+          <span class="stat-value score-value">0</span>
+        </div>
       </div>
+      <button type="button" class="restart-button">New Game</button>
     </header>
 
-    <p class="game-intro">Join the numbers. Get to <strong>2048</strong>.</p>
-
-    <div class="game-container">
-      <div class="game-message" role="status" aria-live="assertive" aria-atomic="true">
+    <div
+      class="board game-container"
+      tabindex="0"
+      role="group"
+      aria-label="Board. Drag, swipe, or use arrow keys."
+    >
+      <div class="grid grid-container" aria-hidden="true">
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+      </div>
+      <div class="tiles tile-container"></div>
+      <div class="overlay game-message" role="status" aria-live="assertive" aria-atomic="true">
         <p></p>
-        <div class="lower">
+        <div class="overlay-actions">
           <button type="button" class="keep-playing-button">Keep going</button>
           <button type="button" class="retry-button">Try again</button>
         </div>
       </div>
-
-      <div class="grid-container">
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-      </div>
-
-      <div class="tile-container" role="group" aria-label="Board"></div>
     </div>
 
-    <p class="game-explanation">Arrow keys or swipe. Matching tiles merge.</p>
+    <p class="hint">Drag, swipe, or arrow keys.</p>
     <p class="credit">
       Original source: <a href="https://github.com/gabrielecirulli/2048" target="_blank" rel="noopener">2048 (MIT, 2014)</a>.
     </p>
-  </div>
+  </main>
 
   <script src="js/bind_polyfill.js"></script>
   <script src="js/classlist_polyfill.js"></script>
