@@ -48,7 +48,7 @@ KeyboardInputManager.prototype.listen = function () {
   this.bindButtonPress(".restart-button", this.restart);
   this.bindButtonPress(".keep-playing-button", this.keepPlaying);
 
-  this.bindSettings();
+  this.bindDockPanels();
   this.bindBoardGestures();
 };
 
@@ -132,31 +132,47 @@ KeyboardInputManager.prototype.bindButtonPress = function (selector, fn) {
   button.addEventListener("click", fn.bind(this));
 };
 
-KeyboardInputManager.prototype.bindSettings = function () {
-  var button = document.querySelector(".settings-button");
-  var panel = document.getElementById("settings-panel");
-  if (!button || !panel) return;
+KeyboardInputManager.prototype.bindDockPanels = function () {
+  var items = [
+    {
+      button: document.querySelector(".info-button"),
+      panel: document.getElementById("info-panel")
+    },
+    {
+      button: document.querySelector(".settings-button"),
+      panel: document.getElementById("settings-panel")
+    }
+  ].filter(function (item) {
+    return item.button && item.panel;
+  });
 
-  function setOpen(open) {
-    panel.hidden = !open;
-    button.setAttribute("aria-expanded", open ? "true" : "false");
+  function closeAll(except) {
+    items.forEach(function (item) {
+      var open = item === except;
+      item.panel.hidden = !open;
+      item.button.setAttribute("aria-expanded", open ? "true" : "false");
+    });
   }
 
-  button.addEventListener("click", function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-    setOpen(panel.hidden);
+  items.forEach(function (item) {
+    item.button.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      closeAll(item.panel.hidden ? item : null);
+    });
   });
 
   document.addEventListener("click", function (event) {
-    if (panel.hidden) return;
-    if (event.target.closest("#settings-panel")) return;
-    setOpen(false);
+    if (event.target.closest(".sheet")) return;
+    closeAll(null);
   });
 
   document.addEventListener("keydown", function (event) {
-    if (event.which !== 27 || panel.hidden) return;
-    setOpen(false);
-    button.focus();
+    if (event.which !== 27) return;
+    var open = items.filter(function (item) {
+      return !item.panel.hidden;
+    })[0];
+    closeAll(null);
+    if (open) open.button.focus();
   });
 };
