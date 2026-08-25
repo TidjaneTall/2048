@@ -24,7 +24,6 @@
           <span class="stat-value score-value">0</span>
         </div>
       </div>
-      <button type="button" class="restart-button">New Game</button>
     </header>
 
     <div
@@ -49,7 +48,37 @@
       </div>
     </div>
 
-    <p class="hint">Drag, swipe, or arrow keys.</p>
+    <footer class="dock">
+      <div class="settings" id="settings-panel" hidden role="dialog" aria-labelledby="settings-title">
+        <h2 id="settings-title">How to play</h2>
+        <p>Swipe, drag, or use the arrow keys. Matching tiles merge when they touch. Reach 2048.</p>
+      </div>
+      <div class="dock-row">
+        <p class="hint">Drag, swipe, or arrow keys.</p>
+        <div class="tools">
+          <button
+            type="button"
+            class="icon-button settings-button"
+            aria-label="Settings"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            aria-controls="settings-panel"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 8h10M18 8h2M4 16h2M10 16h10"/>
+              <circle cx="16" cy="8" r="2"/>
+              <circle cx="8" cy="16" r="2"/>
+            </svg>
+          </button>
+          <button type="button" class="icon-button restart-button" aria-label="New Game">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </footer>
     <p class="credit">
       Original source: <a href="https://github.com/gabrielecirulli/2048" target="_blank" rel="noopener">2048 (MIT, 2014)</a>.
     </p>
