@@ -26,25 +26,39 @@
       </div>
     </header>
 
-    <div
-      class="board game-container"
-      tabindex="0"
-      role="group"
-      aria-label="Board. Drag, swipe, or use arrow keys."
-    >
-      <div class="grid grid-container" aria-hidden="true">
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-      </div>
-      <div class="tiles tile-container"></div>
-      <div class="overlay game-message" role="status" aria-live="assertive" aria-atomic="true">
-        <p></p>
-        <div class="overlay-actions">
-          <button type="button" class="keep-playing-button">Keep going</button>
-          <button type="button" class="retry-button">Try again</button>
+    <div class="stage">
+      <div
+        class="board game-container"
+        tabindex="0"
+        role="group"
+        aria-label="Board. Drag, swipe, or use arrow keys."
+      >
+        <div class="grid grid-container" aria-hidden="true">
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+          <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         </div>
+        <div class="tiles tile-container"></div>
+        <div class="overlay game-message" role="status" aria-live="assertive" aria-atomic="true">
+          <p></p>
+          <div class="overlay-actions">
+            <button type="button" class="keep-playing-button">Keep going</button>
+            <button type="button" class="retry-button">Try again</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sheet" id="info-panel" hidden role="dialog" aria-labelledby="info-title">
+        <h2 id="info-title">Source</h2>
+        <p>
+          Original 2048 is
+          <a href="https://github.com/gabrielecirulli/2048" target="_blank" rel="noopener">MIT, 2014</a>.
+        </p>
+      </div>
+      <div class="sheet" id="settings-panel" hidden role="dialog" aria-labelledby="settings-title">
+        <h2 id="settings-title">How to play</h2>
+        <p>Swipe, drag, or use the arrow keys. Matching tiles merge when they touch. Reach 2048.</p>
       </div>
     </div>
 
@@ -86,17 +100,6 @@
             </svg>
           </button>
         </div>
-      </div>
-      <div class="sheet" id="info-panel" hidden role="dialog" aria-labelledby="info-title">
-        <h2 id="info-title">Source</h2>
-        <p>
-          Original 2048 is
-          <a href="https://github.com/gabrielecirulli/2048" target="_blank" rel="noopener">MIT, 2014</a>.
-        </p>
-      </div>
-      <div class="sheet" id="settings-panel" hidden role="dialog" aria-labelledby="settings-title">
-        <h2 id="settings-title">How to play</h2>
-        <p>Swipe, drag, or use the arrow keys. Matching tiles merge when they touch. Reach 2048.</p>
       </div>
     </footer>
   </main>
