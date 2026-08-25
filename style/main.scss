@@ -192,6 +192,7 @@ body {
   position: relative;
   width: var(--board-size);
   height: var(--board-size);
+  overflow: hidden;
   background: var(--board);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -376,6 +377,10 @@ body {
   outline-color: var(--cream);
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .dock {
   margin-top: 0.85rem;
 }
@@ -392,26 +397,19 @@ body {
   display: flex;
   flex-shrink: 0;
   gap: 0.45rem;
+  margin-left: auto;
 }
 
-.hint,
-.credit {
+.hint {
   margin: 0;
+  min-width: 0;
   color: var(--muted);
   font-size: 0.875rem;
   line-height: 1.45;
 }
 
-.hint {
-  min-width: 0;
-}
-
-.credit {
-  margin-top: 0.55rem;
-}
-
-.settings {
-  margin-bottom: 0.5rem;
+.sheet {
+  margin-top: 0.5rem;
   padding: 1rem 1.1rem;
   background: var(--cream);
   color: var(--ink);
@@ -419,7 +417,7 @@ body {
   border-radius: var(--radius-sm);
 }
 
-.settings h2 {
+.sheet h2 {
   margin: 0 0 0.35rem;
   font-size: 0.75rem;
   font-weight: 700;
@@ -428,13 +426,13 @@ body {
   color: var(--muted);
 }
 
-.settings p {
+.sheet p {
   margin: 0;
   font-size: 0.9375rem;
   line-height: 1.45;
 }
 
-.credit a {
+.sheet a {
   color: inherit;
   font-weight: 700;
   text-underline-offset: 0.14em;
@@ -509,6 +507,14 @@ body {
 
   .overlay p {
     font-size: 1.4rem;
+  }
+
+  .dock-row {
+    flex-wrap: wrap;
+  }
+
+  .hint {
+    flex: 1 0 100%;
   }
 }
 
