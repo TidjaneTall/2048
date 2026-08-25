@@ -188,6 +188,12 @@ body {
   outline-offset: 3px;
 }
 
+.stage {
+  position: relative;
+  width: var(--board-size);
+  max-width: 100%;
+}
+
 .board {
   position: relative;
   width: var(--board-size);
@@ -409,16 +415,22 @@ body {
 }
 
 .sheet {
-  margin-top: 0.5rem;
-  padding: 1rem 1.1rem;
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 1.5rem 1.6rem;
   background: var(--cream);
   color: var(--ink);
-  border: 1px solid rgba(26, 23, 21, 0.12);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
 }
 
 .sheet h2 {
-  margin: 0 0 0.35rem;
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
